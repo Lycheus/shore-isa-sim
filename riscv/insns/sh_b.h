@@ -1,1 +1,3 @@
-MMU.store_uint16(RS1 + insn.s_imm(), RS2);
+reg_t addr = RS1 + insn.s_imm();
+CHECK_BND(addr, insn.rs1());
+MMU.store_uint16(addr, RS2);

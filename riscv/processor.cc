@@ -944,6 +944,11 @@ reg_t illegal_instruction(processor_t* p, insn_t insn, reg_t pc)
   throw trap_illegal_instruction(0);
 }
 
+void check_bounds(reg_t addr, reg_t upper, reg_t lower)
+{
+    if (addr < lower || addr >= upper) throw trap_out_of_bounds(addr);
+}
+
 insn_func_t processor_t::decode_insn(insn_t insn)
 {
   // look up opcode in hash table

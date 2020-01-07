@@ -1,2 +1,4 @@
 require_rv64;
-MMU.store_uint64(RS1 + insn.s_imm(), RS2);
+reg_t addr = RS1 + insn.s_imm();
+CHECK_BND(addr, insn.rs1());
+MMU.store_uint64(addr, RS2);

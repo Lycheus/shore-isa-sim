@@ -144,6 +144,8 @@ private:
 #define P (*p)
 #define FLEN (p->get_flen())
 #define READ_REG(reg) STATE.XPR[reg]
+#define READ_BREG_L(reg) STATE.BPR[2 * reg + 0]
+#define READ_BREG_H(reg) STATE.BPR[2 * reg + 1]
 #define READ_FREG(reg) STATE.FPR[reg]
 #define RD READ_REG(insn.rd())
 #define RS1 READ_REG(insn.rs1())
@@ -172,6 +174,13 @@ private:
     DO_WRITE_FREG(reg, wdata); \
   })
 #endif
+
+// bound macros
+#define CHECK_BND(addr, reg) ({ \
+    reg_t lower = READ_BREG_L(reg); \
+    reg_t upper = READ_BREG_H(reg); \
+    check_bounds(addr, upper, lower); \
+    })
 
 // RVC macros
 #define WRITE_RVC_RS1S(value) WRITE_REG(insn.rvc_rs1s(), value)

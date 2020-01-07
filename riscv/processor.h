@@ -483,6 +483,8 @@ public:
 
 reg_t illegal_instruction(processor_t* p, insn_t insn, reg_t pc);
 
+void check_bounds(reg_t addr, reg_t upper, reg_t lower);
+
 #define REGISTER_INSN(proc, name, match, mask) \
   extern reg_t rv32_##name(processor_t*, insn_t, reg_t); \
   extern reg_t rv64_##name(processor_t*, insn_t, reg_t); \
