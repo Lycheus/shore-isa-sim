@@ -220,6 +220,7 @@ struct state_t
 
   reg_t pc;
   regfile_t<reg_t, NXPR, true> XPR;
+  regfile_t<reg_t, NBPR, false> BPR;
   regfile_t<freg_t, NFPR, false> FPR;
 
   // control and status registers
@@ -244,6 +245,7 @@ struct state_t
   reg_t stvec;
   reg_t satp;
   reg_t scause;
+  reg_t ubounds;
 
   reg_t dpc;
   reg_t dscratch0, dscratch1;

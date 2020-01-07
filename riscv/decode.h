@@ -27,6 +27,7 @@ typedef unsigned __int128 uint128_t;
 #endif
 
 const int NXPR = 32;
+const int NBPR = 64;
 const int NFPR = 32;
 const int NVPR = 32;
 const int NCSR = 4096;
@@ -152,12 +153,18 @@ private:
 
 #ifndef RISCV_ENABLE_COMMITLOG
 # define WRITE_REG(reg, value) STATE.XPR.write(reg, value)
+# define WRITE_BREG(reg, value) STATE.BPR.write(reg, value)
 # define WRITE_FREG(reg, value) DO_WRITE_FREG(reg, freg(value))
 #else
 # define WRITE_REG(reg, value) ({ \
     reg_t wdata = (value); /* value may have side effects */ \
     STATE.log_reg_write = (commit_log_reg_t){(reg) << 1, {wdata, 0}}; \
     STATE.XPR.write(reg, wdata); \
+  })
+# define WRITE_BREG(reg, value) ({ \
+    reg_t wdata = (value); /* value may have side effects */ \
+    STATE.log_reg_write = (commit_log_reg_t){(reg) << 1, {wdata, 0}}; \
+    STATE.BPR.write(reg, wdata); \
   })
 # define WRITE_FREG(reg, value) ({ \
     freg_t wdata = freg(value); /* value may have side effects */ \

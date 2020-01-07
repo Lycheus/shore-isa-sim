@@ -731,6 +731,9 @@ void processor_t::set_csr(int which, reg_t val)
     case CSR_VXRM:
       VU.vxrm = val;
       break;
+    case CSR_UBOUNDS:
+      state.ubounds = val;
+      break;
   }
 }
 
@@ -931,6 +934,7 @@ reg_t processor_t::get_csr(int which)
       if (!supports_extension('V'))
         break;
       return VU.vtype;
+    case CSR_UBOUNDS: return state.ubounds;
   }
   throw trap_illegal_instruction(0);
 }
