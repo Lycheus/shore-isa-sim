@@ -1,6 +1,6 @@
 // vmpopc rd, vs2, vm
 require(P.VU.vsew >= e8 && P.VU.vsew <= e64);
-require(!P.VU.vill);
+require_vector;
 reg_t vl = P.VU.vl;
 reg_t sew = P.VU.vsew;
 reg_t rd_num = insn.rd();
@@ -30,5 +30,4 @@ for (reg_t i = P.VU.vstart ; i < vl; ++i) {
   }
 }
 
-VI_TAIL_ZERO_MASK(rd_num);
 P.VU.vstart = 0;

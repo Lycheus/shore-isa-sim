@@ -1,14 +1,15 @@
-// vnclipu: vd[i] = clip(round(vs2[i] + rnd) >> simm)
+// vnclipu: vd[i] = clip(round(vs2[i] + rnd) >> vs1[i])
 VRM xrm = P.VU.get_vround_mode();
 uint64_t int_max = ~(-1ll << P.VU.vsew);
 VI_VVXI_LOOP_NARROW
 ({
-  uint64_t result = vs2_u;
-  // rounding
-  INT_ROUNDING(result, xrm, sew);
+  uint128_t result = vs2_u;
+  unsigned shift = vs1 & ((sew * 2) - 1);
 
-  // unsigned shifting to rs1
-  result = vzext(result, sew * 2) >> (zimm5 & ((sew * 2) < 32? (sew * 2) - 1: 31));
+  // rounding
+  INT_ROUNDING(result, xrm, shift);
+
+  result = result >> shift;
 
   // saturation
   if (result & (uint64_t)(-1ll << sew)) {
@@ -17,4 +18,4 @@ VI_VVXI_LOOP_NARROW
   }
 
   vd = result;
-})
+}, true)

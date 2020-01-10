@@ -36,6 +36,8 @@ project_name := @PACKAGE_TARNAME@
 src_dir      := @srcdir@
 scripts_dir  := $(src_dir)/scripts
 
+HAVE_INT128 := @HAVE_INT128@
+
 # If the version information is not in the configure script, then we
 # assume that we are in a working directory. We use the vcs-version.sh
 # script in the scripts directory to generate an appropriate version
@@ -109,9 +111,9 @@ RUNFLAGS      := @RUNFLAGS@
 
 MKINSTALLDIRS := $(scripts_dir)/mk-install-dirs.sh
 INSTALL       := @INSTALL@
-INSTALL_HDR   := $(INSTALL) -m 444
+INSTALL_HDR   := $(INSTALL) -m 644
 INSTALL_LIB   := $(INSTALL) -m 644
-INSTALL_EXE   := $(INSTALL) -m 555
+INSTALL_EXE   := $(INSTALL) -m 755
 STOW          := @stow@
 
 # Tests
@@ -214,7 +216,7 @@ $(2)_lib_libnames_shared	:= $$(if $$($(2)_install_shared_lib),lib$(1).so,)
 lib$(1).a : $$($(2)_objs) $$($(2)_c_objs) $$($(2)_lib_libnames)
 	$(AR) rcs $$@ $$^
 lib$(1).so : $$($(2)_objs) $$($(2)_c_objs) $$($(2)_lib_libnames_shared)
-	$(LINK) -shared -o $$@ $(if $(filter Darwin,$(shell uname -s)),-install_name $(install_libs_dir)/$$@) $$^ $$($(2)_lib_libarg) $(LIBS)
+	$(LINK) -shared -o $$@ $(if $(filter Darwin,$(shell uname -s)),-install_name $(install_libs_dir)/$$@) $$^ $$($(2)_lib_libnames) $(LIBS)
 
 $(2)_junk += lib$(1).a
 $(2)_junk += $$(if $$($(2)_install_shared_lib),lib$(1).so,)
@@ -233,7 +235,7 @@ $$($(2)_test_objs) : %.o : %.cc
 	$(COMPILE) -c $$<
 
 $$($(2)_test_exes) : %-utst : %.t.o $$($(2)_test_libnames)
-	$(LINK) -o $$@ $$< $$($(2)_test_libarg) $(LIBS)
+	$(LINK) -o $$@ $$< $$($(2)_test_libnames) $(LIBS)
 
 $(2)_deps += $$($(2)_test_deps)
 $(2)_junk += \
@@ -260,7 +262,7 @@ $$($(2)_prog_objs) : %.o : %.cc
 	$(COMPILE) -c $$<
 
 $$($(2)_prog_exes) : % : %.o $$($(2)_prog_libnames)
-	$(LINK) -o $$@ $$< $$($(2)_prog_libarg) $(LIBS)
+	$(LINK) -o $$@ $$< $$($(2)_prog_libnames) $(LIBS)
 
 $(2)_deps += $$($(2)_prog_deps)
 $(2)_junk += $$($(2)_prog_objs) $$($(2)_prog_deps) $$($(2)_prog_exes)
@@ -275,7 +277,7 @@ $$($(2)_install_prog_objs) : %.o : %.cc $$($(2)_gen_hdrs)
 	$(COMPILE) -c $$<
 
 $$($(2)_install_prog_exes) : % : %.o $$($(2)_prog_libnames)
-	$(LINK) -o $$@ $$< $$($(2)_prog_libarg) $(LIBS)
+	$(LINK) -o $$@ $$< $$($(2)_prog_libnames) $(LIBS)
 
 $(2)_deps += $$($(2)_install_prog_deps)
 $(2)_junk += \
