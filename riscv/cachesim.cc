@@ -137,9 +137,12 @@ void cache_sim_t::access(uint64_t addr, size_t bytes, bool store)
   store ? write_misses++ : read_misses++;
   if (log)
   {
+    //kenny suppress cache log to speed up simulation
+    /*
     std::cerr << name << " "
               << (store ? "write" : "read") << " miss 0x"
               << std::hex << addr << std::endl;
+    */
   }
 
   uint64_t victim = victimize(addr);
