@@ -220,6 +220,7 @@ struct state_t
 
   reg_t pc;
   regfile_t<reg_t, NXPR, true> XPR;
+  regfile_t<reg_t, NBPR, false> BPR;
   regfile_t<freg_t, NFPR, false> FPR;
 
   // control and status registers
@@ -244,6 +245,7 @@ struct state_t
   reg_t stvec;
   reg_t satp;
   reg_t scause;
+  reg_t ubounds;
 
   reg_t dpc;
   reg_t dscratch0, dscratch1;
@@ -480,6 +482,8 @@ public:
 };
 
 reg_t illegal_instruction(processor_t* p, insn_t insn, reg_t pc);
+
+void check_bounds(reg_t addr, reg_t upper, reg_t lower);
 
 #define REGISTER_INSN(proc, name, match, mask) \
   extern reg_t rv32_##name(processor_t*, insn_t, reg_t); \

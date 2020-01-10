@@ -27,6 +27,7 @@ typedef unsigned __int128 uint128_t;
 #endif
 
 const int NXPR = 32;
+const int NBPR = 64;
 const int NFPR = 32;
 const int NVPR = 32;
 const int NCSR = 4096;
@@ -149,6 +150,8 @@ private:
 #define P (*p)
 #define FLEN (p->get_flen())
 #define READ_REG(reg) STATE.XPR[reg]
+#define READ_BREG_L(reg) STATE.BPR[2 * reg + 0]
+#define READ_BREG_H(reg) STATE.BPR[2 * reg + 1]
 #define READ_FREG(reg) STATE.FPR[reg]
 #define RD READ_REG(insn.rd())
 #define RS1 READ_REG(insn.rs1())
@@ -158,6 +161,7 @@ private:
 
 #ifndef RISCV_ENABLE_COMMITLOG
 # define WRITE_REG(reg, value) STATE.XPR.write(reg, value)
+# define WRITE_BREG(reg, value) STATE.BPR.write(reg, value)
 # define WRITE_FREG(reg, value) DO_WRITE_FREG(reg, freg(value))
 #else
 # define WRITE_REG(reg, value) ({ \
@@ -165,12 +169,24 @@ private:
     STATE.log_reg_write = (commit_log_reg_t){(reg) << 1, {wdata, 0}}; \
     STATE.XPR.write(reg, wdata); \
   })
+# define WRITE_BREG(reg, value) ({ \
+    reg_t wdata = (value); /* value may have side effects */ \
+    STATE.log_reg_write = (commit_log_reg_t){(reg) << 1, {wdata, 0}}; \
+    STATE.BPR.write(reg, wdata); \
+  })
 # define WRITE_FREG(reg, value) ({ \
     freg_t wdata = freg(value); /* value may have side effects */ \
     STATE.log_reg_write = (commit_log_reg_t){((reg) << 1) | 1, wdata}; \
     DO_WRITE_FREG(reg, wdata); \
   })
 #endif
+
+// bound macros
+#define CHECK_BND(addr, reg) ({ \
+    reg_t lower = READ_BREG_L(reg); \
+    reg_t upper = READ_BREG_H(reg); \
+    check_bounds(addr, upper, lower); \
+    })
 
 // RVC macros
 #define WRITE_RVC_RS1S(value) WRITE_REG(insn.rvc_rs1s(), value)

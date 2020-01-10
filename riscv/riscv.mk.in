@@ -668,8 +668,27 @@ riscv_insn_priv = \
 	sret \
 	wfi \
 
+riscv_insn_bnd = \
+	bndi \
+	bndr \
+	lbdu \
+	lbdl \
+	sbdu \
+	sbdl \
+	lb_b \
+	lh_b \
+	lw_b \
+	ld_b \
+	lbu_b \
+	lhu_b \
+	lwu_b \
+	sb_b \
+	sh_b \
+	sw_b \
+	sd_b \
 
 riscv_insn_list = \
+	$(riscv_insn_bnd) \
 	$(riscv_insn_ext_a) \
 	$(riscv_insn_ext_c) \
 	$(riscv_insn_ext_i) \

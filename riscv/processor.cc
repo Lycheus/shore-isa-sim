@@ -743,6 +743,9 @@ void processor_t::set_csr(int which, reg_t val)
       dirty_fp_state;
       VU.vxrm = val;
       break;
+    case CSR_UBOUNDS:
+      state.ubounds = val;
+      break;
   }
 }
 
@@ -937,9 +940,7 @@ reg_t processor_t::get_csr(int which)
     case CSR_VTYPE:
       require_vector_vs;
       return VU.vtype;
-    case CSR_VLENB:
-      require_vector_vs;
-      return VU.vlenb;
+    case CSR_UBOUNDS: return state.ubounds;
   }
   throw trap_illegal_instruction(0);
 }
@@ -947,6 +948,11 @@ reg_t processor_t::get_csr(int which)
 reg_t illegal_instruction(processor_t* p, insn_t insn, reg_t pc)
 {
   throw trap_illegal_instruction(0);
+}
+
+void check_bounds(reg_t addr, reg_t upper, reg_t lower)
+{
+    if (addr < lower || addr >= upper) throw trap_out_of_bounds(addr);
 }
 
 insn_func_t processor_t::decode_insn(insn_t insn)
