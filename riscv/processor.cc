@@ -952,7 +952,11 @@ reg_t illegal_instruction(processor_t* p, insn_t insn, reg_t pc)
 
 void check_bounds(reg_t addr, reg_t upper, reg_t lower)
 {
-    if (addr < lower || addr >= upper) throw trap_out_of_bounds(addr);
+  if (addr < lower || addr >= upper){
+    //kenny debugging
+    printf("kenny: memory violation %lx(addr)\t %lx(lower)\t %lx(upper)\n", addr, lower, upper);
+    throw trap_out_of_bounds(addr);
+  }
 }
 
 insn_func_t processor_t::decode_insn(insn_t insn)
