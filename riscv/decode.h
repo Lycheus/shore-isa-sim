@@ -162,6 +162,17 @@ private:
 #ifndef RISCV_ENABLE_COMMITLOG
 # define WRITE_REG(reg, value) STATE.XPR.write(reg, value)
 # define WRITE_BREG(reg, value) STATE.BPR.write(reg, value)
+# define PROP_BREG(reg, value) ({ \
+    reg_t bounds_csr; \
+    switch (STATE.prv) { \
+      case PRV_M: bounds_csr = STATE.mbounds; \
+      case PRV_S: bounds_csr = STATE.sbounds; \
+      case PRV_U: bounds_csr = STATE.ubounds; \
+    }; \
+    if (bounds_csr & (1UL << ((8 * sizeof(reg_t)) - 1))) { \
+      STATE.BPR.write(reg, value); \
+    } \
+  })
 # define WRITE_FREG(reg, value) DO_WRITE_FREG(reg, freg(value))
 #else
 # define WRITE_REG(reg, value) ({ \
@@ -173,6 +184,19 @@ private:
     reg_t wdata = (value); /* value may have side effects */ \
     STATE.log_reg_write = (commit_log_reg_t){(reg) << 1, {wdata, 0}}; \
     STATE.BPR.write(reg, wdata); \
+  })
+# define PROP_BREG(reg, value) ({ \
+    reg_t bound_csr; \
+    switch (STATE.prv) { \
+      case PRV_M: bounds_csr = STATE.mbounds; \
+      case PRV_S: bounds_csr = STATE.sbounds; \
+      case PRV_U: bounds_csr = STATE.ubounds; \
+    }; \
+    if (bounds_csr & (1UL << ((8 * sizeof(reg_t)) - 1))) { \
+      reg_t wdata = (value); /* value may have side effects */ \
+      STATE.log_reg_write = (commit_log_reg_t){(reg) << 1, {wdata, 0}}; \
+      STATE.BPR.write(reg, wdata); \
+    } \
   })
 # define WRITE_FREG(reg, value) ({ \
     freg_t wdata = freg(value); /* value may have side effects */ \
