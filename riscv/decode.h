@@ -163,11 +163,10 @@ private:
 # define WRITE_REG(reg, value) STATE.XPR.write(reg, value)
 # define WRITE_BREG(reg, value) STATE.BPR.write(reg, value)
 # define PROP_BREG(reg, value) ({ \
-    reg_t bounds_csr; \
+    reg_t bounds_csr = STATE.mbounds; \
     switch (STATE.prv) { \
-      case PRV_M: bounds_csr = STATE.mbounds; \
-      case PRV_S: bounds_csr = STATE.sbounds; \
-      case PRV_U: bounds_csr = STATE.ubounds; \
+      case PRV_S: bounds_csr = STATE.sbounds; break; \
+      case PRV_U: bounds_csr = STATE.ubounds; break; \
     }; \
     if (bounds_csr & (1UL << ((8 * sizeof(reg_t)) - 1))) { \
       STATE.BPR.write(reg, value); \
@@ -186,11 +185,10 @@ private:
     STATE.BPR.write(reg, wdata); \
   })
 # define PROP_BREG(reg, value) ({ \
-    reg_t bound_csr; \
+    reg_t bound_csr = STATE.mbounds; \
     switch (STATE.prv) { \
-      case PRV_M: bounds_csr = STATE.mbounds; \
-      case PRV_S: bounds_csr = STATE.sbounds; \
-      case PRV_U: bounds_csr = STATE.ubounds; \
+      case PRV_S: bounds_csr = STATE.sbounds; break; \
+      case PRV_U: bounds_csr = STATE.ubounds; break; \
     }; \
     if (bounds_csr & (1UL << ((8 * sizeof(reg_t)) - 1))) { \
       reg_t wdata = (value); /* value may have side effects */ \
