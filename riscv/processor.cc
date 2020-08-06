@@ -746,6 +746,12 @@ void processor_t::set_csr(int which, reg_t val)
     case CSR_UBOUNDS:
       state.ubounds = val;
       break;
+    case CSR_MBOUNDS:
+      state.mbounds = val;
+      break;
+    case CSR_SBOUNDS:
+      state.sbounds = val;
+      break;
   }
 }
 
@@ -941,6 +947,8 @@ reg_t processor_t::get_csr(int which)
       require_vector_vs;
       return VU.vtype;
     case CSR_UBOUNDS: return state.ubounds;
+    case CSR_MBOUNDS: return state.mbounds;
+    case CSR_SBOUNDS: return state.sbounds;
   }
   throw trap_illegal_instruction(0);
 }

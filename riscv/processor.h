@@ -246,6 +246,8 @@ struct state_t
   reg_t satp;
   reg_t scause;
   reg_t ubounds;
+  reg_t mbounds;
+  reg_t sbounds;
 
   reg_t dpc;
   reg_t dscratch0, dscratch1;
