@@ -669,10 +669,11 @@ riscv_insn_priv = \
 	wfi \
 
 riscv_insn_bnd = \
-	bndi \
 	bndr \
 	lbdu \
 	lbdl \
+	lbdus \
+	lbdls \
 	sbdu \
 	sbdl \
 	lb_b \

@@ -6,4 +6,4 @@ reg_t bound = MMU.load_uint64(shadow_addr);
 //WRITE_BREG(2 * insn.rd(), MMU.load_uint64(shadow_addr)); //FIX
 WRITE_RD(MMU.load_uint64(shadow_addr)); //REVISION to load from shadow memory to physical register instead shadow register
 
-//printf("LBDL: base: %lx, \t read from\t shadow_addr: %lx\n", bound, shadow_addr);
+printf("%08X: LBDL: base: %lx, \t read from\t shadow_addr: %lx\n", pc, bound, shadow_addr);

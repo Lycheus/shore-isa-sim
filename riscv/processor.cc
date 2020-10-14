@@ -960,8 +960,15 @@ reg_t illegal_instruction(processor_t* p, insn_t insn, reg_t pc)
 
 void check_bounds(reg_t addr, reg_t upper, reg_t lower)
 {
+  /* skip uninitialized metadata
+  if (lower == 0 && upper == 0)
+    return;
+  */
+
   if (addr < lower || addr >= upper){
     //kenny debugging
+    //shall add PC information for faster debugging
+    //reg_t pc = state.pc;
     printf("kenny: memory violation %lx(addr)\t %lx(lower)\t %lx(upper)\n", addr, lower, upper);
     throw trap_out_of_bounds(addr);
   }

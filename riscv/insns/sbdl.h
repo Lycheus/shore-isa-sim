@@ -5,4 +5,4 @@ reg_t bound = STATE.BPR[2 * insn.rs2()];
 
 MMU.store_uint64(shadow_addr, bound);
 
-//printf("SBDL: base: %lx, \t write to\t shadow_addr: %lx\n", bound, shadow_addr);
+printf("%08X: SBDL: base: %lx, \t write to\t shadow_addr: %lx\n", pc, bound, shadow_addr);
