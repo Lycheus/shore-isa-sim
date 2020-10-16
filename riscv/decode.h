@@ -204,10 +204,10 @@ private:
 #endif
 
 // bound macros
-#define CHECK_BND(addr, reg) ({ \
+#define CHECK_BND(addr, reg, k_pc) ({    \
     reg_t lower = READ_BREG_L(reg); \
     reg_t upper = READ_BREG_H(reg); \
-    check_bounds(addr, upper, lower); \
+    check_bounds(addr, upper, lower, k_pc); \
     })
 
 // RVC macros

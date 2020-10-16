@@ -958,7 +958,7 @@ reg_t illegal_instruction(processor_t* p, insn_t insn, reg_t pc)
   throw trap_illegal_instruction(0);
 }
 
-void check_bounds(reg_t addr, reg_t upper, reg_t lower)
+void check_bounds(reg_t addr, reg_t upper, reg_t lower, reg_t pc)
 {
   /* skip uninitialized metadata
   if (lower == 0 && upper == 0)
@@ -969,7 +969,7 @@ void check_bounds(reg_t addr, reg_t upper, reg_t lower)
     //kenny debugging
     //shall add PC information for faster debugging
     //reg_t pc = state.pc;
-    printf("kenny: memory violation %lx(addr)\t %lx(lower)\t %lx(upper)\n", addr, lower, upper);
+    printf("kenny %08X: memory violation %lx(addr)\t %lx(lower)\t %lx(upper)\n", pc, addr, lower, upper);
     throw trap_out_of_bounds(addr);
   }
 }
