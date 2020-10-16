@@ -969,7 +969,7 @@ void check_bounds(reg_t addr, reg_t upper, reg_t lower, reg_t pc)
     //kenny debugging
     //shall add PC information for faster debugging
     //reg_t pc = state.pc;
-    printf("kenny %08X: memory violation %lx(addr)\t %lx(lower)\t %lx(upper)\n", pc, addr, lower, upper);
+    printf("%08X: kenny memory violation %lx(addr)\t %lx(lower)\t %lx(upper)\n", pc, addr, lower, upper);
     throw trap_out_of_bounds(addr);
   }
 }
