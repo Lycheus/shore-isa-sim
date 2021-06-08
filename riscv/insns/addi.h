@@ -8,7 +8,7 @@ PROP_BREG(2 * insn.rd() + 1, STATE.BPR[2 * insn.rs1() + 1]);
 // reg_t rv64_addi(processor_t* p, insn_t insn, reg_t pc)
 // *p->get_state().
 
-
+/*
 int k_rd = insn.rd();
 int k_rs1 = insn.rs1();
 signed long k_imm = insn.i_imm();
@@ -29,3 +29,4 @@ if (k_rd == 2 &&  k_rs1 == 2){
     }
     printf("\n");
  }
+*/
